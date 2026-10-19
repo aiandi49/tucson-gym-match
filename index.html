@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en" data-default-theme="dark" data-theme="dark" data-font-size="sm">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tucson Gym Match</title>
+<meta name="description" content="Ask a planner which gym near Tucson 85710 fits you: real first-year costs, yearly fees and spa perks for Planet Fitness, Chuze, LA Fitness, the YMCA and more.">
+<meta name="color-scheme" content="dark light">
+<script>(function(){var d=document.documentElement,t=d.getAttribute('data-default-theme')||'light',f='sm';try{var a=localStorage.getItem('pref-theme'),b=localStorage.getItem('pref-font-size');if(a==='light'||a==='dark')t=a;if(b==='sm'||b==='md'||b==='lg'||b==='xl')f=b}catch(e){}d.setAttribute('data-theme',t);d.setAttribute('data-font-size',f)})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/assets/engine.css">
+<link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+</head>
+<body>
+<div class="glow" aria-hidden="true"></div>
+<a class="skip" href="#input">Skip to the question box</a>
+
+<header class="nav">
+  <div class="nav-row">
+    <a class="brand" href="/" aria-label="Tucson Gym Match home">
+      <span class="brand-mark" aria-hidden="true">TG</span>
+      <span class="brand-name"><strong>Tucson Gym</strong><span>Match · 85710</span></span>
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="/" aria-current="page">Gym finder</a>
+      <a href="/guide">Full guide</a>
+    </nav>
+    <div class="prefs">
+      <div class="size-group" role="group" aria-label="Text size">
+        <button type="button" class="size-btn s1" data-size-btn="sm" aria-pressed="true" aria-label="Text size small">A</button>
+        <button type="button" class="size-btn s2" data-size-btn="md" aria-pressed="false" aria-label="Text size medium">A</button>
+        <button type="button" class="size-btn s3" data-size-btn="lg" aria-pressed="false" aria-label="Text size large">A</button>
+        <button type="button" class="size-btn s4" data-size-btn="xl" aria-pressed="false" aria-label="Text size extra large">A</button>
+      </div>
+      <button type="button" class="theme-btn" id="theme-toggle" aria-pressed="true" aria-label="Switch to light theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="currentColor"/></svg>
+        <span class="theme-label">Dark</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <span class="chip">Prices checked Oct 19, 2026</span>
+    <h1>Find the <span class="grad">right gym</span> near 85710</h1>
+    <p class="subline"><strong>Say what you want from a gym and what you'll pay.</strong> <strong>Get real first-year costs, fees and a clear pick.</strong></p>
+    <div class="hero-links">
+      <a class="chip-link" href="/guide">Read the full guide</a>
+      <a class="chip-link" href="/guide#is-black-card-worth-it">Is the Black Card worth it?</a>
+    </div>
+  </section>
+
+  <section class="board" id="board" aria-label="Gym finder">
+    <article class="card chat-card" id="chat-card" aria-labelledby="chat-title">
+      <div class="chat-head">
+        <div class="chat-title">
+          <h2 id="chat-title">Ask the gym planner</h2>
+          <p>Straight answers on prices, fees and perks around 85710.</p>
+        </div>
+        <div class="chat-tools">
+          <span class="count-chip" id="msg-count">No messages yet</span>
+          <span class="tool-btns">
+          <button type="button" class="icon-btn" id="download-btn" aria-label="Download your gym plan" title="Download your gym plan" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v11m0 0-4.5-4.5M12 14l4.5-4.5M4.5 17.5V20h15v-2.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" class="icon-btn" id="reset-btn" aria-label="Start over" title="Start over">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" class="pill-btn" id="full-btn" aria-pressed="false" aria-label="Full page">Full page</button>
+          </span>
+        </div>
+      </div>
+
+      <div class="log" id="log" role="log" aria-live="polite" aria-label="Conversation">
+        <div class="empty" id="empty-state">
+          <p class="empty-title">Start with what matters to you.</p>
+          <p>Try <em>“massage chairs for under $30 a month”</em> or <em>“Does Planet Fitness have a yearly fee?”</em></p>
+        </div>
+      </div>
+
+      <form class="composer" id="composer" novalidate>
+        <label class="sr-only" for="input">Your question for the gym planner</label>
+        <textarea id="input" name="message" rows="1" maxlength="2000" placeholder="What do you want from a gym?" autocomplete="off"></textarea>
+        <div class="composer-actions">
+          <button type="button" class="mic-btn" id="mic-btn" aria-pressed="false" aria-label="Start voice input" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM6 11a6 6 0 0 0 12 0M12 17v4m-3 0h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="submit" class="send-btn" id="send-btn">Send</button>
+        </div>
+      </form>
+      <p class="mic-status" id="mic-status" hidden>Listening. Take your time; the mic turns off after 10 seconds of silence.</p>
+      <p class="chat-error" id="mic-error" role="alert" hidden></p>
+      <p class="chat-note">This chat stays in this tab and clears when you close it. Voice input may be processed by your browser maker (Google for Chrome, Apple for Safari).</p>
+    </article>
+
+    <article class="card top-card" aria-labelledby="top-label">
+      <span class="pill-label" id="top-label">Top match</span>
+      <div class="match-tile" id="top-tile">
+        <span class="tile-kind" id="top-kind">Gym or plan</span>
+        <strong class="tile-title" id="top-title">Waiting for your first question</strong>
+      </div>
+      <div class="fit-row">
+        <span class="fit-score" id="top-score">—</span>
+        <span class="fit-label">fit score</span>
+      </div>
+      <p class="fit-why" id="top-why">Ask about a gym, or tell the planner your budget and the perks you care about.</p>
+    </article>
+
+    <article class="card short-card" aria-labelledby="short-title">
+      <div class="short-head">
+        <div>
+          <h2 id="short-title">Shortlist</h2>
+          <p class="rank-note" id="rank-note">Ranked by fit once you share your priorities.</p>
+        </div>
+        <div class="gauge" role="img" id="gauge" aria-label="Top fit score: not yet scored">
+          <svg viewBox="0 0 44 44" aria-hidden="true" focusable="false">
+            <circle class="gauge-track" cx="22" cy="22" r="18"/>
+            <circle class="gauge-fill" id="gauge-fill" cx="22" cy="22" r="18" stroke-dasharray="0 113.1"/>
+          </svg>
+          <span class="gauge-num" id="gauge-num">—</span>
+        </div>
+      </div>
+      <ol class="short-list" id="short-list">
+        <li class="short-empty">Matches will appear here.</li>
+      </ol>
+    </article>
+
+    <article class="card details-card" aria-labelledby="details-title">
+      <h2 id="details-title">Listing details</h2>
+      <p class="details-name" id="details-name">Pick a match to see its prices, fees and perks.</p>
+      <dl class="details-list" id="details-list"></dl>
+      <a class="guide-link" id="guide-link" href="/guide">Read about it in the guide</a>
+      <section class="next-step" aria-labelledby="next-title">
+        <h3 id="next-title">Next step</h3>
+        <p id="next-text">Use your free guest visit, then come back and tell the planner what you liked.</p>
+      </section>
+    </article>
+  </section>
+
+  <p class="page-note">Independent guide, not affiliated with any gym. Prices change; confirm at the front desk before you sign.</p>
+</main>
+<script src="/assets/prefs.js"></script>
+<script src="/assets/engine.js"></script>
+</body>
+</html>

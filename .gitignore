@@ -1,0 +1,13 @@
+# Secrets: never commit real keys
+.env
+.env.*
+!.env.example
+
+# Dependencies and Vercel local state
+node_modules/
+.vercel/
+
+# OS and editor clutter
+.DS_Store
+Thumbs.db
+*.log
