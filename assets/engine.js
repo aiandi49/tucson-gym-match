@@ -116,11 +116,18 @@
   // ---- Safe rich text (no innerHTML) -------------------------------------
   var URL_RE = /(https:\/\/[^\s<>()"']+[^\s<>()"'.,;:!?])/g;
 
-  function appendInline(parent, text) {
-    var clean = text.replace(/\*\*(.+?)\*\*/g, '$1').replace(/__(.+?)__/g, '$1');
+  // Plain text for the download file: drop markdown emphasis and heading marks.
+  function plainText(text) {
+    return String(text)
+      .replace(/\*\*(.+?)\*\*/g, '$1')
+      .replace(/__(.+?)__/g, '$1')
+      .replace(/^\s*#+\s*/gm, '');
+  }
+
+  function appendLinks(parent, text) {
     var last = 0;
-    clean.replace(URL_RE, function (match, _g, offset) {
-      if (offset > last) parent.appendChild(document.createTextNode(clean.slice(last, offset)));
+    text.replace(URL_RE, function (match, _g, offset) {
+      if (offset > last) parent.appendChild(document.createTextNode(text.slice(last, offset)));
       var a = document.createElement('a');
       a.href = match;
       a.textContent = match;
@@ -130,33 +137,55 @@
       last = offset + match.length;
       return match;
     });
-    if (last < clean.length) parent.appendChild(document.createTextNode(clean.slice(last)));
+    if (last < text.length) parent.appendChild(document.createTextNode(text.slice(last)));
+  }
+
+  // **bold** becomes <strong>; everything else stays text. No innerHTML anywhere.
+  function appendInline(parent, text) {
+    var parts = String(text).replace(/__(.+?)__/g, '**$1**').split(/\*\*(.+?)\*\*/);
+    parts.forEach(function (part, i) {
+      if (!part) return;
+      if (i % 2 === 1) {
+        var strong = document.createElement('strong');
+        appendLinks(strong, part);
+        parent.appendChild(strong);
+      } else {
+        appendLinks(parent, part.replace(/\*\*/g, ''));
+      }
+    });
   }
 
   function renderRich(container, text) {
-    var blocks = text.split(/\n\s*\n/);
-    blocks.forEach(function (block) {
-      var lines = block.split('\n').filter(function (l) { return l.trim() !== ''; });
-      if (!lines.length) return;
-      var bullet = /^\s*[-*•]\s+/;
-      var numbered = /^\s*\d+[.)]\s+/;
-      if (lines.every(function (l) { return bullet.test(l); }) || lines.every(function (l) { return numbered.test(l); })) {
-        var isNum = numbered.test(lines[0]);
-        var list = document.createElement(isNum ? 'ol' : 'ul');
-        lines.forEach(function (l) {
-          var li = document.createElement('li');
-          appendInline(li, l.replace(isNum ? numbered : bullet, '').replace(/^#+\s*/, ''));
-          list.appendChild(li);
-        });
-        container.appendChild(list);
-      } else {
-        lines.forEach(function (l, idx) {
-          var p = document.createElement('p');
-          appendInline(p, l.replace(/^#+\s*/, '').replace(bullet, '• '));
-          if (idx === 0 && /^#+\s/.test(l)) p.className = 'strong';
-          container.appendChild(p);
-        });
+    var bullet = /^\s*[-*•]\s+/;
+    var numbered = /^\s*\d+[.)]\s+/;
+    var heading = /^\s*#+\s*/;
+    var list = null;
+    var listType = '';
+    String(text).split('\n').forEach(function (raw) {
+      var line = raw.replace(/\s+$/, '');
+      if (!line.trim()) { list = null; return; }
+      var type = bullet.test(line) ? 'ul' : numbered.test(line) ? 'ol' : '';
+      if (type) {
+        if (!list || listType !== type) {
+          list = document.createElement(type);
+          listType = type;
+          container.appendChild(list);
+        }
+        var li = document.createElement('li');
+        appendInline(li, line.replace(type === 'ul' ? bullet : numbered, ''));
+        list.appendChild(li);
+        return;
       }
+      list = null;
+      var p = document.createElement('p');
+      var isHeading = heading.test(line);
+      var body = line.replace(heading, '');
+      if (isHeading || /^\*\*[^*]+\*\*:?$/.test(body.trim())) {
+        p.className = 'lead';
+        body = body.replace(/\*\*/g, '');
+      }
+      appendInline(p, body);
+      container.appendChild(p);
     });
   }
 
@@ -504,10 +533,10 @@
     if (!list.length) L.push('No options were ranked in this conversation.');
     list.forEach(function (m, i) {
       L.push((i + 1) + '. ' + m.title + ' - Fit score: ' + (m.score === null ? 'not scored yet' : m.score + '/100'));
-      if (m.why) L.push('   Why: ' + m.why);
+      if (m.why) L.push('   Why: ' + plainText(m.why));
       Object.keys(m.details).forEach(function (k) {
         if (HIDDEN_DETAIL_KEYS.indexOf(k.toLowerCase()) !== -1) return;
-        L.push('   ' + k + ': ' + m.details[k]);
+        L.push('   ' + k + ': ' + plainText(m.details[k]));
       });
       L.push('');
     });
@@ -517,12 +546,12 @@
     for (var i = state.messages.length - 1; i >= 0; i--) {
       if (state.messages[i].role === 'assistant') { lastBot = state.messages[i]; break; }
     }
-    L.push(lastBot ? parseReply(lastBot.content).text : 'No reply yet.');
+    L.push(lastBot ? plainText(parseReply(lastBot.content).text) : 'No reply yet.');
     L.push('');
     L.push('FULL CONVERSATION');
     L.push('=================');
     state.messages.forEach(function (m) {
-      var text = m.role === 'assistant' ? parseReply(m.content).text : m.content;
+      var text = m.role === 'assistant' ? plainText(parseReply(m.content).text) : m.content;
       L.push((m.role === 'user' ? 'You: ' : BOT_NAME + ': ') + text);
       L.push('');
     });
