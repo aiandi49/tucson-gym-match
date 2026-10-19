@@ -130,9 +130,11 @@
 
     <article class="card details-card" aria-labelledby="details-title">
       <h2 id="details-title">Listing details</h2>
-      <p class="details-name" id="details-name">Pick a match to see its prices, fees and perks.</p>
-      <dl class="details-list" id="details-list"></dl>
-      <a class="guide-link" id="guide-link" href="/guide">Read about it in the guide</a>
+      <div class="card-scroll" id="details-scroll" tabindex="0" aria-label="Listing details for the selected match">
+        <p class="details-name" id="details-name">Pick a match to see its prices, fees and perks.</p>
+        <dl class="details-list" id="details-list"></dl>
+        <a class="guide-link" id="guide-link" href="/guide">Read about it in the guide</a>
+      </div>
       <section class="next-step" aria-labelledby="next-title">
         <h3 id="next-title">Next step</h3>
         <p id="next-text">Use your free guest visit, then come back and tell the planner what you liked.</p>
